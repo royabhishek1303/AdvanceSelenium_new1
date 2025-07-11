@@ -38,7 +38,7 @@ public class CreateOrganizationLinkTest extends Base_Class {
 	public void createOrganizationLinkTest() throws Throwable {
 
 		
-
+      //branch1--smokeTest
 	     HomePage homePage = new HomePage(driver);
 	     homePage.clickToOrgLink();
 	 	OrganizationPage org = new OrganizationPage(driver);
