@@ -1,5 +1,6 @@
 {
     "Browser":"edge",
+    "RunHeadless": "true",
     "url":"http://localhost:8888/index.php",
     "username":"admin",
     "password":"admin"

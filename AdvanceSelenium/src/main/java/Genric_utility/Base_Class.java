@@ -17,6 +17,8 @@ import org.testng.annotations.Parameters;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import Pom_Repo.HomePage;
 import Pom_Repo.*;
 
@@ -45,23 +47,32 @@ public class Base_Class {
 
 	    File_Utility fUtil = new File_Utility();
 	    String BROWSER = fUtil.getKeyAndValue("Browser");
+	    String RUN_HEADLESS = fUtil.getKeyAndValue("RunHeadless");
 
-	    // Define driver path manually if Selenium Manager fails
-	    String edgeDriverPath = "C:\\Drivers\\msedgedriver.exe";  // Adjust if needed
+	    boolean isHeadless = RUN_HEADLESS.equalsIgnoreCase("true");
 
 	    if (BROWSER.equalsIgnoreCase("chrome")) {
 	        ChromeOptions chromeOptions = new ChromeOptions();
-	        chromeOptions.addArguments("--headless");  // Optional: run Chrome in headless
+	        if (isHeadless) {
+	            chromeOptions.addArguments("--headless", "--disable-gpu", "--window-size=1920,1080");
+	        }
 	        driver = new ChromeDriver(chromeOptions);
 
 	    } else if (BROWSER.equalsIgnoreCase("edge")) {
-	        System.setProperty("webdriver.edge.driver", edgeDriverPath); // Ensure msedgedriver path
+	        System.setProperty("webdriver.edge.driver", "C:\\Drivers\\msedgedriver.exe");
 	        EdgeOptions edgeOptions = new EdgeOptions();
-	        edgeOptions.addArguments("--headless");  // Run Edge in headless mode
+	        if (isHeadless) {
+	            edgeOptions.addArguments("--headless", "--disable-gpu", "--window-size=1920,1080");
+	        }
 	        driver = new EdgeDriver(edgeOptions);
 
-	    } else {
-	        driver = new FirefoxDriver(); // Can also add FirefoxOptions if needed
+	    } else if (BROWSER.equalsIgnoreCase("firefox")) {
+	        System.setProperty("webdriver.gecko.driver", "C:\\Drivers\\geckodriver.exe");
+	        FirefoxOptions firefoxOptions = new FirefoxOptions();
+	        if (isHeadless) {
+	            firefoxOptions.addArguments("--headless", "--width=1920", "--height=1080");
+	        }
+	        driver = new FirefoxDriver(firefoxOptions);
 	    }
 
 	    Web_Driver_Utility wdu = new Web_Driver_Utility();
