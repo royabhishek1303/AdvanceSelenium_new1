@@ -14,7 +14,9 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Parameters;
-
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import Pom_Repo.HomePage;
 import Pom_Repo.*;
 
@@ -40,25 +42,34 @@ public class Base_Class {
 	@BeforeClass
 	(groups = {"smoke", "regression"})
 	public void BC() throws Throwable {
-		
-		File_Utility fUtil = new File_Utility();
-		String BROWSER = fUtil.getKeyAndValue("Browser");
 
-		//String BROWSER = System.getProperty("Browser");
-		
-		if(BROWSER.equalsIgnoreCase("chrome")) {
-			driver=new ChromeDriver();
-		}else if(BROWSER.equalsIgnoreCase("edge")) {
-			driver=new EdgeDriver();
-			
-		}else {
-			driver=new FirefoxDriver();
-		}
+	    File_Utility fUtil = new File_Utility();
+	    String BROWSER = fUtil.getKeyAndValue("Browser");
+
+	    // Define driver path manually if Selenium Manager fails
+	    String edgeDriverPath = "C:\\Drivers\\msedgedriver.exe";  // Adjust if needed
+
+	    if (BROWSER.equalsIgnoreCase("chrome")) {
+	        ChromeOptions chromeOptions = new ChromeOptions();
+	        chromeOptions.addArguments("--headless");  // Optional: run Chrome in headless
+	        driver = new ChromeDriver(chromeOptions);
+
+	    } else if (BROWSER.equalsIgnoreCase("edge")) {
+	        System.setProperty("webdriver.edge.driver", edgeDriverPath); // Ensure msedgedriver path
+	        EdgeOptions edgeOptions = new EdgeOptions();
+	        edgeOptions.addArguments("--headless");  // Run Edge in headless mode
+	        driver = new EdgeDriver(edgeOptions);
+
+	    } else {
+	        driver = new FirefoxDriver(); // Can also add FirefoxOptions if needed
+	    }
+
 	    Web_Driver_Utility wdu = new Web_Driver_Utility();
 	    wdu.maximizeWindow(driver);
 	    wdu.waitElmentsToLoad(driver);
-		System.out.println("Launching the Browser");
-		sdriver=driver;
+
+	    System.out.println("Launching the Browser");
+	    sdriver = driver;
 	}
 //	@Parameters({"URL","Username","Password"})
 	
